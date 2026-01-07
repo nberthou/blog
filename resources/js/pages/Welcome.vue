@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { dashboard, login, register } from '@/routes';
 import { Head, Link } from '@inertiajs/vue3';
+import AppHeaderLayout from "@/layouts/app/AppHeaderLayout.vue";
 
 withDefaults(
     defineProps<{
@@ -17,7 +18,7 @@ withDefaults(
         <link rel="preconnect" href="https://rsms.me/" />
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     </Head>
-    <div
+<!--    <div
         class="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] lg:justify-center lg:p-8 dark:bg-[#0a0a0a]"
     >
         <header
@@ -837,6 +838,9 @@ withDefaults(
                 </div>
             </main>
         </div>
-        <div class="hidden h-14.5 lg:block"></div>
-    </div>
+        <div class="hidden h-14.5 lg:block">l</div>
+    </div>-->
+    <AppHeaderLayout>
+        Accueil
+    </AppHeaderLayout>
 </template>
