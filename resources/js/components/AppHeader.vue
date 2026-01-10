@@ -36,6 +36,7 @@ import type { BreadcrumbItem, NavItem } from '@/types';
 import { InertiaLinkProps, Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
 import { computed } from 'vue';
+import LoginMenuContent from "@/components/LoginMenuContent.vue";
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
@@ -63,6 +64,10 @@ const activeItemStyles = computed(
 const mainNavItems: NavItem[] = [];
 
 const rightNavItems: NavItem[] = [];
+
+const onAvatarClick = () => {
+
+}
 </script>
 
 <template>
@@ -242,10 +247,18 @@ const rightNavItems: NavItem[] = [];
                                         {{ getInitials(auth.user?.name) }}
                                     </AvatarFallback>
                                 </Avatar>
+                                <Avatar v-else >
+                                    <AvatarFallback
+                                        class="rounded-lg bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white"
+                                    >
+                                        ?
+                                    </AvatarFallback>
+                                </Avatar>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" class="w-56">
-                            <UserMenuContent :user="auth.user" />
+                            <UserMenuContent :user="auth.user" v-if="auth.user" />
+                            <LoginMenuContent v-else />
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
