@@ -6,7 +6,8 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { Link} from '@inertiajs/vue3';
+import LoginAlert from "@/components/LoginAlert";
+import { Link } from '@inertiajs/vue3';
 import { login, register} from "@/routes";
 
 </script>
