@@ -65,9 +65,6 @@ const mainNavItems: NavItem[] = [];
 
 const rightNavItems: NavItem[] = [];
 
-const onAvatarClick = () => {
-
-}
 </script>
 
 <template>
