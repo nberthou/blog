@@ -6,7 +6,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import LoginDialog from "@/components/LoginDialog.vue";
+import AuthDialog from "@/components/AuthDialog.vue";
 import { Link } from '@inertiajs/vue3';
 import { login, register} from "@/routes";
 
@@ -20,8 +20,8 @@ import { login, register} from "@/routes";
     </DropdownMenuLabel>
     <DropdownMenuSeparator />
     <DropdownMenuGroup>
-        <LoginDialog type="LOGIN" />
-        <LoginDialog type="REGISTER" />
+        <AuthDialog type="LOGIN" />
+        <AuthDialog type="REGISTER" />
     </DropdownMenuGroup>
 </template>
 

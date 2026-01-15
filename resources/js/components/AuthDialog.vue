@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import {DropdownMenuGroup, DropdownMenuItem} from "@/components/ui/dropdown-menu";
 import { DialogPortal } from "reka-ui";
+import AuthForm from "@/components/AuthForm.vue";
 
 
 type Props = {
@@ -19,6 +20,17 @@ type Props = {
 }
 
 const props = defineProps<Props>();
+
+const dialogInfos = {
+    LOGIN: {
+        title: "Se connecter",
+        description: "Connectez-vous à votre compte en entrant votre email et mot de passe ci-dessous."
+    },
+    REGISTER: {
+        title: "S'inscrire",
+        description: "Créez un compte en entrant vos informations ci-dessous."
+    }
+};
 
 </script>
 
@@ -29,15 +41,13 @@ const props = defineProps<Props>();
             <DialogPortal :to="'body'">
                 <DialogOverlay />
                 <DialogContent>
-                    <DialogTitle>{{props.type === "LOGIN" ? "Se connecter": "S'inscrire"}}</DialogTitle>
+                    <DialogTitle>{{dialogInfos[type].title}}</DialogTitle>
                     <DialogDescription>
-                        <Alert variant="info">
-                            <AlertTitle>Fonctionnalité en cours de développement</AlertTitle>
-                            <AlertDescription>
-                                Cette fonctionnalité sera disponible prochainement. Restez à l'écoute !
-                            </AlertDescription>
-                        </Alert>
+                        <p class="text-sm text-muted-foreground">
+                            {{ dialogInfos[type].description }}
+                        </p>
                     </DialogDescription>
+                    <AuthForm :type="type" />
                     <DialogClose />
                 </DialogContent>
             </DialogPortal>
