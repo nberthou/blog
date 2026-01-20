@@ -2,6 +2,7 @@
 import AppContent from '@/components/AppContent.vue';
 import AppHeader from '@/components/AppHeader.vue';
 import AppShell from '@/components/AppShell.vue';
+import FlashMessages from '@/components/FlashMessages.vue';
 import type { BreadcrumbItemType } from '@/types';
 
 interface Props {
@@ -20,4 +21,5 @@ withDefaults(defineProps<Props>(), {
             <slot />
         </AppContent>
     </AppShell>
+    <FlashMessages />
 </template>

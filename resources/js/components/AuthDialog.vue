@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-import { Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {
     Dialog,
     DialogContent,
@@ -10,9 +9,10 @@ import {
     DialogOverlay,
     DialogDescription
 } from "@/components/ui/dialog";
-import {DropdownMenuGroup, DropdownMenuItem} from "@/components/ui/dropdown-menu";
+import {DropdownMenuItem} from "@/components/ui/dropdown-menu";
 import { DialogPortal } from "reka-ui";
 import AuthForm from "@/components/AuthForm.vue";
+import { ref } from "vue";
 
 
 type Props = {
@@ -20,6 +20,8 @@ type Props = {
 }
 
 const props = defineProps<Props>();
+
+const open = ref(false);
 
 const dialogInfos = {
     LOGIN: {
@@ -32,11 +34,15 @@ const dialogInfos = {
     }
 };
 
+function closeDialog() {
+    open.value = false;
+}
+
 </script>
 
 <template>
     <DropdownMenuItem :as-child>
-        <Dialog>
+        <Dialog v-model:open="open">
             <DialogTrigger @click.stop>{{ props.type === "LOGIN" ? "Se connecter": "S'inscrire" }}</DialogTrigger>
             <DialogPortal :to="'body'">
                 <DialogOverlay />
@@ -47,7 +53,7 @@ const dialogInfos = {
                             {{ dialogInfos[type].description }}
                         </p>
                     </DialogDescription>
-                    <AuthForm :type="type" />
+                    <AuthForm :type="type" @success="closeDialog" />
                     <DialogClose />
                 </DialogContent>
             </DialogPortal>
