@@ -31,11 +31,12 @@ import {
 import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import { toUrl, urlIsActive } from '@/lib/utils';
-import { dashboard } from '@/routes';
+import { dashboard, home } from '@/routes';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { InertiaLinkProps, Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
 import { computed } from 'vue';
+import LoginMenuContent from "@/components/LoginMenuContent.vue";
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
@@ -60,26 +61,10 @@ const activeItemStyles = computed(
             : '',
 );
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-];
+const mainNavItems: NavItem[] = [];
 
-const rightNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
-];
+const rightNavItems: NavItem[] = [];
+
 </script>
 
 <template>
@@ -148,7 +133,7 @@ const rightNavItems: NavItem[] = [
                     </Sheet>
                 </div>
 
-                <Link :href="dashboard()" class="flex items-center gap-x-2">
+                <Link :href="home()" class="flex items-center gap-x-2">
                     <AppLogo />
                 </Link>
 
@@ -189,7 +174,7 @@ const rightNavItems: NavItem[] = [
 
                 <div class="ml-auto flex items-center space-x-2">
                     <div class="relative flex items-center space-x-1">
-                        <Button
+<!--                        <Button
                             variant="ghost"
                             size="icon"
                             class="group h-9 w-9 cursor-pointer"
@@ -197,7 +182,7 @@ const rightNavItems: NavItem[] = [
                             <Search
                                 class="size-5 opacity-80 group-hover:opacity-100"
                             />
-                        </Button>
+                        </Button>-->
 
                         <div class="hidden space-x-1 lg:flex">
                             <template
@@ -246,6 +231,7 @@ const rightNavItems: NavItem[] = [
                             >
                                 <Avatar
                                     class="size-8 overflow-hidden rounded-full"
+                                    v-if="auth.user"
                                 >
                                     <AvatarImage
                                         v-if="auth.user.avatar"
@@ -258,10 +244,18 @@ const rightNavItems: NavItem[] = [
                                         {{ getInitials(auth.user?.name) }}
                                     </AvatarFallback>
                                 </Avatar>
+                                <Avatar v-else >
+                                    <AvatarFallback
+                                        class="rounded-lg bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white"
+                                    >
+                                        ?
+                                    </AvatarFallback>
+                                </Avatar>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" class="w-56">
-                            <UserMenuContent :user="auth.user" />
+                            <UserMenuContent :user="auth.user" v-if="auth.user" />
+                            <LoginMenuContent v-else />
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
