@@ -35,7 +35,7 @@ import { dashboard, home } from '@/routes';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { InertiaLinkProps, Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import LoginMenuContent from "@/components/LoginMenuContent.vue";
 
 interface Props {
@@ -65,6 +65,11 @@ const mainNavItems: NavItem[] = [];
 
 const rightNavItems: NavItem[] = [];
 
+const userMenuOpen = ref(false);
+
+watch(() => auth.value.user, () => {
+    userMenuOpen.value = false;
+});
 </script>
 
 <template>
@@ -222,7 +227,7 @@ const rightNavItems: NavItem[] = [];
                         </div>
                     </div>
 
-                    <DropdownMenu>
+                    <DropdownMenu v-model:open="userMenuOpen">
                         <DropdownMenuTrigger :as-child="true">
                             <Button
                                 variant="ghost"
@@ -255,7 +260,7 @@ const rightNavItems: NavItem[] = [];
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" class="w-56">
                             <UserMenuContent :user="auth.user" v-if="auth.user" />
-                            <LoginMenuContent v-else />
+                            <LoginMenuContent v-else @close="userMenuOpen = false" />
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

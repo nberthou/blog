@@ -10,6 +10,9 @@ import AuthDialog from "@/components/AuthDialog.vue";
 import { Link } from '@inertiajs/vue3';
 import { login, register} from "@/routes";
 
+const emit = defineEmits<{
+    close: [];
+}>();
 </script>
 
 <template>
@@ -20,8 +23,9 @@ import { login, register} from "@/routes";
     </DropdownMenuLabel>
     <DropdownMenuSeparator />
     <DropdownMenuGroup>
-        <AuthDialog type="LOGIN" />
-        <AuthDialog type="REGISTER" />
+        <AuthDialog type="LOGIN" @success="emit('close')" />
+        <DropdownMenuSeparator />
+        <AuthDialog type="REGISTER" @success="emit('close')" />
     </DropdownMenuGroup>
 </template>
 

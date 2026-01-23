@@ -30,7 +30,7 @@ watch(() => flash.value?.success, (message) => {
         leave-from-class="opacity-100 translate-y-0"
         leave-to-class="opacity-0 translate-y-[-10px]"
     >
-        <div v-if="showSuccess" class="fixed top-4 right-4 z-50 max-w-sm">
+        <div v-if="showSuccess" class="fixed top-20 right-4 z-50 max-w-sm">
             <AlertSuccess :message="successMessage" />
         </div>
     </Transition>

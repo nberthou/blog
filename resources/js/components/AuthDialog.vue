@@ -21,6 +21,10 @@ type Props = {
 
 const props = defineProps<Props>();
 
+const emit = defineEmits<{
+    success: [];
+}>();
+
 const open = ref(false);
 
 const dialogInfos = {
@@ -36,6 +40,7 @@ const dialogInfos = {
 
 function closeDialog() {
     open.value = false;
+    emit('success');
 }
 
 </script>
@@ -43,7 +48,9 @@ function closeDialog() {
 <template>
     <DropdownMenuItem :as-child>
         <Dialog v-model:open="open">
-            <DialogTrigger @click.stop>{{ props.type === "LOGIN" ? "Se connecter": "S'inscrire" }}</DialogTrigger>
+            <DialogTrigger class="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground" @click.stop>
+                {{ props.type === "LOGIN" ? "Se connecter": "S'inscrire" }}
+            </DialogTrigger>
             <DialogPortal :to="'body'">
                 <DialogOverlay />
                 <DialogContent>
