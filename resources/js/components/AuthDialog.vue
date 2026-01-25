@@ -1,23 +1,21 @@
 <script setup lang="ts">
-
+import AuthForm from '@/components/AuthForm.vue';
 import {
     Dialog,
-    DialogContent,
-    DialogTitle,
     DialogClose,
-    DialogTrigger,
+    DialogContent,
+    DialogDescription,
     DialogOverlay,
-    DialogDescription
-} from "@/components/ui/dialog";
-import {DropdownMenuItem} from "@/components/ui/dropdown-menu";
-import { DialogPortal } from "reka-ui";
-import AuthForm from "@/components/AuthForm.vue";
-import { ref } from "vue";
-
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { DialogPortal } from 'reka-ui';
+import { ref } from 'vue';
 
 type Props = {
-    type: "LOGIN" | "REGISTER"
-}
+    type: 'LOGIN' | 'REGISTER';
+};
 
 const props = defineProps<Props>();
 
@@ -29,32 +27,35 @@ const open = ref(false);
 
 const dialogInfos = {
     LOGIN: {
-        title: "Se connecter",
-        description: "Connectez-vous à votre compte en entrant votre email et mot de passe ci-dessous."
+        title: 'Se connecter',
+        description:
+            'Connectez-vous à votre compte en entrant votre email et mot de passe ci-dessous.',
     },
     REGISTER: {
         title: "S'inscrire",
-        description: "Créez un compte en entrant vos informations ci-dessous."
-    }
+        description: 'Créez un compte en entrant vos informations ci-dessous.',
+    },
 };
 
 function closeDialog() {
     open.value = false;
     emit('success');
 }
-
 </script>
 
 <template>
     <DropdownMenuItem :as-child>
         <Dialog v-model:open="open">
-            <DialogTrigger class="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground" @click.stop>
-                {{ props.type === "LOGIN" ? "Se connecter": "S'inscrire" }}
+            <DialogTrigger
+                class="relative flex w-full cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm transition-colors outline-none select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                @click.stop
+            >
+                {{ props.type === 'LOGIN' ? 'Se connecter' : "S'inscrire" }}
             </DialogTrigger>
             <DialogPortal :to="'body'">
                 <DialogOverlay />
                 <DialogContent>
-                    <DialogTitle>{{dialogInfos[type].title}}</DialogTitle>
+                    <DialogTitle>{{ dialogInfos[type].title }}</DialogTitle>
                     <DialogDescription>
                         <p class="text-sm text-muted-foreground">
                             {{ dialogInfos[type].description }}
@@ -68,6 +69,4 @@ function closeDialog() {
     </DropdownMenuItem>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

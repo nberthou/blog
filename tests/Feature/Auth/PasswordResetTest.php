@@ -4,10 +4,10 @@ use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Notification;
 
-test('reset password link screen can be rendered', function () {
+test('reset password link page redirects to home (auth via modal)', function () {
     $response = $this->get(route('password.request'));
 
-    $response->assertStatus(200);
+    $response->assertRedirect(route('home'));
 });
 
 test('reset password link can be requested', function () {
@@ -20,7 +20,7 @@ test('reset password link can be requested', function () {
     Notification::assertSentTo($user, ResetPassword::class);
 });
 
-test('reset password screen can be rendered', function () {
+test('reset password page redirects to home (auth via modal)', function () {
     Notification::fake();
 
     $user = User::factory()->create();
@@ -30,7 +30,7 @@ test('reset password screen can be rendered', function () {
     Notification::assertSentTo($user, ResetPassword::class, function ($notification) {
         $response = $this->get(route('password.reset', $notification->token));
 
-        $response->assertStatus(200);
+        $response->assertRedirect(route('home'));
 
         return true;
     });
@@ -53,7 +53,7 @@ test('password can be reset with valid token', function () {
 
         $response
             ->assertSessionHasNoErrors()
-            ->assertRedirect(route('login'));
+            ->assertRedirect(route('home'));
 
         return true;
     });
