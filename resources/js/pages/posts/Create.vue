@@ -71,6 +71,7 @@ const removeImage = () => {
 const submit = () => {
     form.post(store().url, {
         forceFormData: true,
+        preserveScroll: false,
     });
 };
 </script>

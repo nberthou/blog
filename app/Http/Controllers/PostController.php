@@ -17,11 +17,21 @@ class PostController extends Controller
     use AuthorizesRequests;
 
     /**
-     * Display a listing of published posts (public).
+     * Display a listing of posts.
+     * Shows published posts + user's own drafts/scheduled/archived posts.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $posts = Post::published()
+        $user = $request->user();
+
+        $posts = Post::query()
+            ->where(function ($query) use ($user) {
+                $query->published();
+
+                if ($user) {
+                    $query->orWhere('user_id', $user->id);
+                }
+            })
             ->with(['author:id,name', 'categories:id,name,slug'])
             ->recent()
             ->paginate(10);

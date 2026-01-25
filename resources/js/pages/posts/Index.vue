@@ -60,6 +60,8 @@ const breadcrumbItems: BreadcrumbItem[] = [
                     v-for="post in posts.data"
                     :key="post.id"
                     :post="post"
+                    :show-status="user?.id === post.user_id"
+                    :show-view-count="user?.id === post.user_id"
                 />
             </div>
 
