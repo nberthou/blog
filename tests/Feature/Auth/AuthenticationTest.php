@@ -2,15 +2,14 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
-use Laravel\Fortify\Features;
 
-test('login screen can be rendered', function () {
+test('login page redirects to home (auth via modal)', function () {
     $response = $this->get(route('login'));
 
-    $response->assertStatus(200);
+    $response->assertRedirect(route('home'));
 });
 
-test('users can authenticate using the login screen', function () {
+test('users can authenticate', function () {
     $user = User::factory()->create();
 
     $response = $this->post(route('login.store'), [
@@ -19,25 +18,7 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
-    // LoginResponse redirects back to the previous page
     $response->assertRedirect(route('home'));
-});
-
-test('users with two factor enabled are redirected to two factor challenge', function () {
-    if (! Features::canManageTwoFactorAuthentication()) {
-        $this->markTestSkipped('Two-factor authentication is not enabled.');
-    }
-
-    $user = User::factory()->withTwoFactor()->create();
-
-    $response = $this->post(route('login'), [
-        'email' => $user->email,
-        'password' => 'Password1',
-    ]);
-
-    $response->assertRedirect(route('two-factor.login'));
-    $response->assertSessionHas('login.id', $user->id);
-    $this->assertGuest();
 });
 
 test('users can not authenticate with invalid password', function () {

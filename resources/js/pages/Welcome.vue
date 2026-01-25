@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { dashboard, login, register } from '@/routes';
-import { Head, Link } from '@inertiajs/vue3';
-import AppHeaderLayout from "@/layouts/app/AppHeaderLayout.vue";
+import AppHeaderLayout from '@/layouts/app/AppHeaderLayout.vue';
+import { Head } from '@inertiajs/vue3';
 
 withDefaults(
     defineProps<{
@@ -18,7 +17,5 @@ withDefaults(
         <link rel="preconnect" href="https://rsms.me/" />
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     </Head>
-    <AppHeaderLayout>
-        Accueil
-    </AppHeaderLayout>
+    <AppHeaderLayout> Accueil </AppHeaderLayout>
 </template>

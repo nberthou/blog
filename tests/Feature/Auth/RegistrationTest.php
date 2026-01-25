@@ -4,10 +4,10 @@ use App\Models\EmailVerificationCode;
 use App\Notifications\VerifyEmailWithCode;
 use Illuminate\Support\Facades\Notification;
 
-test('registration screen can be rendered', function () {
+test('registration page redirects to home (auth via modal)', function () {
     $response = $this->get(route('register'));
 
-    $response->assertStatus(200);
+    $response->assertRedirect(route('home'));
 });
 
 test('new users can register with valid password', function () {

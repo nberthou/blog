@@ -2,6 +2,7 @@
 import AppLogo from '@/components/AppLogo.vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import LoginMenuContent from '@/components/LoginMenuContent.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -31,12 +32,11 @@ import {
 import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import { toUrl, urlIsActive } from '@/lib/utils';
-import { dashboard, home } from '@/routes';
+import { home } from '@/routes';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { InertiaLinkProps, Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
+import { Menu } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
-import LoginMenuContent from "@/components/LoginMenuContent.vue";
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
@@ -67,9 +67,12 @@ const rightNavItems: NavItem[] = [];
 
 const userMenuOpen = ref(false);
 
-watch(() => auth.value.user, () => {
-    userMenuOpen.value = false;
-});
+watch(
+    () => auth.value.user,
+    () => {
+        userMenuOpen.value = false;
+    },
+);
 </script>
 
 <template>
@@ -179,7 +182,7 @@ watch(() => auth.value.user, () => {
 
                 <div class="ml-auto flex items-center space-x-2">
                     <div class="relative flex items-center space-x-1">
-<!--                        <Button
+                        <!--                        <Button
                             variant="ghost"
                             size="icon"
                             class="group h-9 w-9 cursor-pointer"
@@ -249,7 +252,7 @@ watch(() => auth.value.user, () => {
                                         {{ getInitials(auth.user?.name) }}
                                     </AvatarFallback>
                                 </Avatar>
-                                <Avatar v-else >
+                                <Avatar v-else>
                                     <AvatarFallback
                                         class="rounded-lg bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white"
                                     >
@@ -259,8 +262,14 @@ watch(() => auth.value.user, () => {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" class="w-56">
-                            <UserMenuContent :user="auth.user" v-if="auth.user" />
-                            <LoginMenuContent v-else @close="userMenuOpen = false" />
+                            <UserMenuContent
+                                :user="auth.user"
+                                v-if="auth.user"
+                            />
+                            <LoginMenuContent
+                                v-else
+                                @close="userMenuOpen = false"
+                            />
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

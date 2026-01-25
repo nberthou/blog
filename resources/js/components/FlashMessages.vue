@@ -1,24 +1,30 @@
 <script setup lang="ts">
-import { usePage } from '@inertiajs/vue3';
 import AlertSuccess from '@/components/AlertSuccess.vue';
+import { usePage } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
 
 const page = usePage();
 
-const flash = computed(() => page.props.flash as { success?: string; error?: string } | undefined);
+const flash = computed(
+    () => page.props.flash as { success?: string; error?: string } | undefined,
+);
 
 const showSuccess = ref(false);
 const successMessage = ref('');
 
-watch(() => flash.value?.success, (message) => {
-    if (message) {
-        successMessage.value = message;
-        showSuccess.value = true;
-        setTimeout(() => {
-            showSuccess.value = false;
-        }, 5000);
-    }
-}, { immediate: true });
+watch(
+    () => flash.value?.success,
+    (message) => {
+        if (message) {
+            successMessage.value = message;
+            showSuccess.value = true;
+            setTimeout(() => {
+                showSuccess.value = false;
+            }, 5000);
+        }
+    },
+    { immediate: true },
+);
 </script>
 
 <template>
