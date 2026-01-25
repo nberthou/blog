@@ -2,20 +2,36 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Laravel Sail
+
+This project uses **Laravel Sail** for local development. All PHP commands must be run through Sail:
+
+```bash
+# Instead of:
+php artisan migrate
+composer install
+./vendor/bin/pest
+
+# Use:
+sail artisan migrate
+sail composer install
+sail pest
+```
+
 ## Development Commands
 
 ```bash
 # Start development (runs Laravel server, queue, logs, and Vite concurrently)
-composer dev
+sail composer dev
 
 # Run tests
-composer test
+sail composer test
 
 # Run a single test file
-./vendor/bin/pest tests/Feature/Auth/AuthenticationTest.php
+sail pest tests/Feature/Auth/AuthenticationTest.php
 
 # Run a specific test
-./vendor/bin/pest --filter "test_name"
+sail pest --filter "test_name"
 
 # Lint and format
 npm run lint           # ESLint with auto-fix
@@ -23,7 +39,7 @@ npm run format         # Prettier format
 npm run format:check   # Check formatting without fixing
 
 # PHP code style
-./vendor/bin/pint
+sail pint
 
 # Build
 npm run build          # Production build
