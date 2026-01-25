@@ -22,7 +22,7 @@ class PostController extends Controller
     public function index(): Response
     {
         $posts = Post::published()
-            ->with('author:id,name')
+            ->with(['author:id,name', 'categories:id,name,slug'])
             ->recent()
             ->paginate(10);
 
@@ -37,7 +37,7 @@ class PostController extends Controller
     public function myPosts(Request $request): Response
     {
         $posts = Post::byAuthor($request->user())
-            ->with('author:id,name')
+            ->with(['author:id,name', 'categories:id,name,slug'])
             ->latest()
             ->paginate(10);
 
@@ -95,16 +95,19 @@ class PostController extends Controller
     /**
      * Display the specified post.
      */
-    public function show(Post $post): Response
+    public function show(Post $post, Request $request): Response
     {
         $this->authorize('view', $post);
 
         $post->incrementViewCount();
 
-        $post->load('author:id,name');
+        $post->load(['author:id,name', 'categories:id,name,slug']);
+
+        $canEdit = $request->user()?->id === $post->user_id;
 
         return Inertia::render('posts/Show', [
             'post' => $post->append(['featured_image_url', 'is_published']),
+            'canEdit' => $canEdit,
         ]);
     }
 
@@ -114,6 +117,8 @@ class PostController extends Controller
     public function edit(Post $post): Response
     {
         $this->authorize('update', $post);
+
+        $post->load('categories:id,name,slug');
 
         return Inertia::render('posts/Edit', [
             'post' => $post->append(['featured_image_url']),
