@@ -33,6 +33,8 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import { toUrl, urlIsActive } from '@/lib/utils';
 import { home } from '@/routes';
+import { index as categoriesIndex } from '@/routes/categories';
+import { index as postsIndex } from '@/routes/posts';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { InertiaLinkProps, Link, usePage } from '@inertiajs/vue3';
 import { Menu } from 'lucide-vue-next';
@@ -64,6 +66,26 @@ const activeItemStyles = computed(
 const mainNavItems: NavItem[] = [];
 
 const rightNavItems: NavItem[] = [];
+
+const isAdmin = computed(() => auth.value.user?.id === 1);
+
+const internalNavItems = computed(() => {
+    const items: NavItem[] = [
+        {
+            title: 'Articles',
+            href: postsIndex().url,
+        },
+    ];
+
+    if (isAdmin.value) {
+        items.push({
+            title: 'Catégories',
+            href: categoriesIndex().url,
+        });
+    }
+
+    return items;
+});
 
 const userMenuOpen = ref(false);
 
@@ -106,6 +128,20 @@ watch(
                                 <nav class="-mx-3 space-y-1">
                                     <Link
                                         v-for="item in mainNavItems"
+                                        :key="item.title"
+                                        :href="item.href"
+                                        class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
+                                        :class="activeItemStyles(item.href)"
+                                    >
+                                        <component
+                                            v-if="item.icon"
+                                            :is="item.icon"
+                                            class="h-5 w-5"
+                                        />
+                                        {{ item.title }}
+                                    </Link>
+                                    <Link
+                                        v-for="item in internalNavItems"
                                         :key="item.title"
                                         :href="item.href"
                                         class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
@@ -181,17 +217,28 @@ watch(
                 </div>
 
                 <div class="ml-auto flex items-center space-x-2">
-                    <div class="relative flex items-center space-x-1">
-                        <!--                        <Button
+                    <!-- Internal Navigation Links -->
+                    <nav class="hidden items-center space-x-1 lg:flex">
+                        <Button
+                            v-for="item in internalNavItems"
+                            :key="item.title"
                             variant="ghost"
-                            size="icon"
-                            class="group h-9 w-9 cursor-pointer"
+                            size="sm"
+                            as-child
+                            :class="[
+                                'cursor-pointer',
+                                isCurrentRoute(item.href)
+                                    ? 'bg-accent text-accent-foreground'
+                                    : '',
+                            ]"
                         >
-                            <Search
-                                class="size-5 opacity-80 group-hover:opacity-100"
-                            />
-                        </Button>-->
+                            <Link :href="item.href">
+                                {{ item.title }}
+                            </Link>
+                        </Button>
+                    </nav>
 
+                    <div class="relative flex items-center space-x-1">
                         <div class="hidden space-x-1 lg:flex">
                             <template
                                 v-for="item in rightNavItems"
