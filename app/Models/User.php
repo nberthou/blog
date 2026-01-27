@@ -56,6 +56,14 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get the comments written by this user.
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
      * Determine if the user is an administrator.
      */
     public function isAdmin(): bool
