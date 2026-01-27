@@ -5,9 +5,20 @@ namespace Database\Seeders;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use League\CommonMark\CommonMarkConverter;
 
 class PostSeeder extends Seeder
 {
+    private CommonMarkConverter $markdown;
+
+    public function __construct()
+    {
+        $this->markdown = new CommonMarkConverter([
+            'html_input' => 'strip',
+            'allow_unsafe_links' => false,
+        ]);
+    }
+
     /**
      * Demo posts with realistic French content.
      */
@@ -124,7 +135,7 @@ class PostSeeder extends Seeder
                 ->create([
                     'title' => $postData['title'],
                     'excerpt' => $postData['excerpt'],
-                    'content' => $postData['content'],
+                    'content' => $this->markdown->convert($postData['content'])->getContent(),
                     'published_at' => $publishedAt,
                     'created_at' => $publishedAt->copy()->subHours(rand(1, 24)),
                     'view_count' => fake()->numberBetween(50, 3000),
