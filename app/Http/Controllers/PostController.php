@@ -113,11 +113,19 @@ class PostController extends Controller
 
         $post->load(['author:id,name', 'categories:id,name,slug']);
 
+        $comments = $post->comments()
+            ->with(['author:id,name', 'replies.author:id,name'])
+            ->whereNull('parent_id')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         $canEdit = $request->user()?->id === $post->user_id;
 
         return Inertia::render('posts/Show', [
             'post' => $post->append(['featured_image_url', 'is_published']),
             'canEdit' => $canEdit,
+            'comments' => $comments,
+            'commentsCount' => $post->comments()->count(),
         ]);
     }
 

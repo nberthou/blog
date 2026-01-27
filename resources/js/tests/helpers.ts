@@ -1,4 +1,4 @@
-import type { Category, Post } from '@/types/post';
+import type { Category, Comment, Post } from '@/types/post';
 
 export const createMockCategory = (
     overrides: Partial<Category> = {},
@@ -48,5 +48,20 @@ export const createMockPaginatedData = <T>(
     prev_page_url: null,
     to: data.length > 0 ? data.length : null,
     total: data.length,
+    ...overrides,
+});
+
+export const createMockComment = (
+    overrides: Partial<Comment> = {},
+): Comment => ({
+    id: 1,
+    post_id: 1,
+    user_id: 1,
+    parent_id: null,
+    content: 'Ceci est un commentaire de test.',
+    created_at: '2024-01-15T10:00:00Z',
+    updated_at: '2024-01-15T10:00:00Z',
+    author: { id: 1, name: 'Jean Dupont' },
+    replies: [],
     ...overrides,
 });

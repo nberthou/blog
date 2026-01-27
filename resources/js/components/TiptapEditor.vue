@@ -280,7 +280,7 @@ const setLink = () => {
         <!-- Editor Content -->
         <EditorContent
             :editor="editor"
-            class="prose prose-sm dark:prose-invert min-h-[200px] max-w-none p-4 focus-within:outline-none [&_.is-editor-empty:first-child::before]:pointer-events-none [&_.is-editor-empty:first-child::before]:float-left [&_.is-editor-empty:first-child::before]:h-0 [&_.is-editor-empty:first-child::before]:text-muted-foreground [&_.is-editor-empty:first-child::before]:content-[attr(data-placeholder)] [&_.tiptap]:min-h-[180px] [&_.tiptap]:outline-none"
+            class="prose prose-sm min-h-[200px] max-w-none p-4 focus-within:outline-none dark:prose-invert [&_.is-editor-empty:first-child::before]:pointer-events-none [&_.is-editor-empty:first-child::before]:float-left [&_.is-editor-empty:first-child::before]:h-0 [&_.is-editor-empty:first-child::before]:text-muted-foreground [&_.is-editor-empty:first-child::before]:content-[attr(data-placeholder)] [&_.tiptap]:min-h-[180px] [&_.tiptap]:outline-none"
         />
     </div>
 </template>

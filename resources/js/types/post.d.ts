@@ -12,6 +12,18 @@ export interface Author {
     name: string;
 }
 
+export interface Comment {
+    id: number;
+    post_id: number;
+    user_id: number;
+    parent_id: number | null;
+    content: string;
+    created_at: string;
+    updated_at: string;
+    author: Author;
+    replies?: Comment[];
+}
+
 export interface Post {
     id: number;
     user_id: number;
