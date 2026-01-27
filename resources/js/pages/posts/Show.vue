@@ -2,6 +2,7 @@
 import { destroy, edit, index } from '@/routes/posts';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
+import CommentSection from '@/components/comments/CommentSection.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,12 +17,14 @@ import {
 } from '@/components/ui/dialog';
 import AppLayout from '@/layouts/app/AppHeaderLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import type { Post } from '@/types/post';
+import type { Comment, Post } from '@/types/post';
 import { ArrowLeft, Calendar, Edit, Eye, Trash2, User } from 'lucide-vue-next';
 
 interface Props {
     post: Post;
     canEdit: boolean;
+    comments: Comment[];
+    commentsCount: number;
 }
 
 const props = defineProps<Props>();
@@ -175,8 +178,15 @@ const handleDelete = () => {
 
             <!-- Content -->
             <div
-                class="prose prose-lg dark:prose-invert max-w-none"
+                class="prose prose-lg max-w-none dark:prose-invert"
                 v-html="post.content"
+            />
+
+            <!-- Comments Section -->
+            <CommentSection
+                :comments="comments"
+                :post-slug="post.slug"
+                :comments-count="commentsCount"
             />
         </article>
     </AppLayout>
