@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AuthDialog from '@/components/AuthDialog.vue';
+import ThemeToggle from '@/components/ThemeToggle.vue';
 import {
     DropdownMenuGroup,
     DropdownMenuLabel,
@@ -25,4 +26,6 @@ const emit = defineEmits<{
         <DropdownMenuSeparator />
         <AuthDialog type="REGISTER" @success="emit('close')" />
     </DropdownMenuGroup>
+    <DropdownMenuSeparator />
+    <ThemeToggle />
 </template>

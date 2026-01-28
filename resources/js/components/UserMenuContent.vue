@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ThemeToggle from '@/components/ThemeToggle.vue';
 import UserInfo from '@/components/UserInfo.vue';
 import {
     DropdownMenuGroup,
@@ -38,6 +39,8 @@ defineProps<Props>();
             </Link>
         </DropdownMenuItem>
     </DropdownMenuGroup>
+    <DropdownMenuSeparator />
+    <ThemeToggle />
     <DropdownMenuSeparator />
     <DropdownMenuItem :as-child="true">
         <Link
