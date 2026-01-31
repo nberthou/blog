@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PostStatus;
+use App\Http\Requests\Post\BatchDeletePostRequest;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Models\Post;
@@ -38,26 +39,6 @@ class PostController extends Controller
 
         return Inertia::render('posts/Index', [
             'posts' => $posts,
-        ]);
-    }
-
-    /**
-     * Display a listing of the authenticated user's posts.
-     */
-    public function myPosts(Request $request): Response
-    {
-        $posts = Post::byAuthor($request->user())
-            ->with(['author:id,name', 'categories:id,name,slug'])
-            ->latest()
-            ->paginate(10);
-
-        return Inertia::render('posts/MyPosts', [
-            'posts' => $posts,
-            'statuses' => collect(PostStatus::cases())->map(fn ($status) => [
-                'value' => $status->value,
-                'label' => $status->label(),
-                'color' => $status->color(),
-            ]),
         ]);
     }
 
@@ -188,8 +169,40 @@ class PostController extends Controller
         $post->delete();
 
         return redirect()
-            ->route('posts.my-posts')
+            ->route('posts.index')
             ->with('success', 'Article supprimé avec succès.');
+    }
+
+    /**
+     * Remove multiple posts from storage.
+     */
+    public function batchDestroy(BatchDeletePostRequest $request): RedirectResponse
+    {
+        $ids = $request->validated('ids');
+
+        $posts = Post::whereIn('id', $ids)->get();
+
+        $deletedCount = 0;
+        foreach ($posts as $post) {
+            if ($request->user()->can('delete', $post)) {
+                $post->delete();
+                $deletedCount++;
+            }
+        }
+
+        if ($deletedCount === 0) {
+            return redirect()
+                ->route('posts.index')
+                ->with('error', 'Aucun article n\'a pu être supprimé.');
+        }
+
+        $message = $deletedCount === 1
+            ? '1 article supprimé avec succès.'
+            : "{$deletedCount} articles supprimés avec succès.";
+
+        return redirect()
+            ->route('posts.index')
+            ->with('success', $message);
     }
 
     /**

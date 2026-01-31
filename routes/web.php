@@ -3,16 +3,11 @@
 use App\Http\Controllers\Auth\EmailVerificationCodeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Laravel\Fortify\Features;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
-})->name('home');
+Route::get('/', HomeController::class)->name('home');
 
 require __DIR__.'/settings.php';
 
@@ -29,12 +24,12 @@ Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show')
 
 // Posts - Authenticated routes
 Route::middleware('auth')->group(function () {
-    Route::get('/my-posts', [PostController::class, 'myPosts'])->name('posts.my-posts');
     Route::get('/posts-create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+    Route::delete('/posts', [PostController::class, 'batchDestroy'])->name('posts.batch-destroy');
 });
 
 // Comments - Authenticated routes

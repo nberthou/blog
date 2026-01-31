@@ -86,31 +86,6 @@ test('draft post cannot be viewed by other users', function () {
 });
 
 // =========================================================================
-// MY POSTS (Authenticated)
-// =========================================================================
-
-test('my posts page requires authentication', function () {
-    $response = $this->get(route('posts.my-posts'));
-
-    $response->assertRedirect(route('login'));
-});
-
-test('my posts page shows only users posts', function () {
-    $user = User::factory()->create();
-    $userPost = Post::factory()->create(['user_id' => $user->id]);
-    $otherPost = Post::factory()->create();
-
-    $response = $this->actingAs($user)->get(route('posts.my-posts'));
-
-    $response->assertOk();
-    $response->assertInertia(fn (AssertableInertia $page) => $page
-        ->component('posts/MyPosts', false)
-        ->has('posts.data', 1)
-        ->where('posts.data.0.id', $userPost->id)
-    );
-});
-
-// =========================================================================
 // CREATE (Authenticated)
 // =========================================================================
 
@@ -332,7 +307,7 @@ test('author can delete their post', function () {
 
     $response = $this->actingAs($user)->delete(route('posts.destroy', $post));
 
-    $response->assertRedirect(route('posts.my-posts'));
+    $response->assertRedirect(route('posts.index'));
     expect(Post::find($post->id))->toBeNull();
     expect(Post::withTrashed()->find($post->id))->not->toBeNull(); // Soft deleted
 });
@@ -346,4 +321,94 @@ test('non-author cannot delete post', function () {
 
     $response->assertForbidden();
     expect(Post::find($post->id))->not->toBeNull();
+});
+
+// =========================================================================
+// BATCH DESTROY (Authenticated + Author only)
+// =========================================================================
+
+test('author can batch delete their posts', function () {
+    $user = User::factory()->create();
+    $posts = Post::factory()->count(3)->create(['user_id' => $user->id]);
+
+    $response = $this->actingAs($user)->delete(route('posts.batch-destroy'), [
+        'ids' => $posts->pluck('id')->toArray(),
+    ]);
+
+    $response->assertRedirect(route('posts.index'));
+    $response->assertSessionHas('success', '3 articles supprimés avec succès.');
+
+    foreach ($posts as $post) {
+        expect(Post::find($post->id))->toBeNull();
+        expect(Post::withTrashed()->find($post->id))->not->toBeNull();
+    }
+});
+
+test('author can batch delete a single post', function () {
+    $user = User::factory()->create();
+    $post = Post::factory()->create(['user_id' => $user->id]);
+
+    $response = $this->actingAs($user)->delete(route('posts.batch-destroy'), [
+        'ids' => [$post->id],
+    ]);
+
+    $response->assertRedirect(route('posts.index'));
+    $response->assertSessionHas('success', '1 article supprimé avec succès.');
+});
+
+test('batch delete only deletes posts owned by the user', function () {
+    $user = User::factory()->create();
+    $otherUser = User::factory()->create();
+
+    $userPosts = Post::factory()->count(2)->create(['user_id' => $user->id]);
+    $otherPosts = Post::factory()->count(2)->create(['user_id' => $otherUser->id]);
+
+    $allIds = $userPosts->pluck('id')->merge($otherPosts->pluck('id'))->toArray();
+
+    $response = $this->actingAs($user)->delete(route('posts.batch-destroy'), [
+        'ids' => $allIds,
+    ]);
+
+    $response->assertRedirect(route('posts.index'));
+    $response->assertSessionHas('success', '2 articles supprimés avec succès.');
+
+    foreach ($userPosts as $post) {
+        expect(Post::find($post->id))->toBeNull();
+    }
+    foreach ($otherPosts as $post) {
+        expect(Post::find($post->id))->not->toBeNull();
+    }
+});
+
+test('batch delete returns error when no posts can be deleted', function () {
+    $user = User::factory()->create();
+    $otherUser = User::factory()->create();
+    $otherPosts = Post::factory()->count(2)->create(['user_id' => $otherUser->id]);
+
+    $response = $this->actingAs($user)->delete(route('posts.batch-destroy'), [
+        'ids' => $otherPosts->pluck('id')->toArray(),
+    ]);
+
+    $response->assertRedirect(route('posts.index'));
+    $response->assertSessionHas('error', 'Aucun article n\'a pu être supprimé.');
+});
+
+test('batch delete requires at least one id', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)->delete(route('posts.batch-destroy'), [
+        'ids' => [],
+    ]);
+
+    $response->assertSessionHasErrors('ids');
+});
+
+test('batch delete requires authentication', function () {
+    $posts = Post::factory()->count(2)->create();
+
+    $response = $this->delete(route('posts.batch-destroy'), [
+        'ids' => $posts->pluck('id')->toArray(),
+    ]);
+
+    $response->assertRedirect(route('login'));
 });
