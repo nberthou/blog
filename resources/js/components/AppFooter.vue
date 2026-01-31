@@ -27,16 +27,7 @@ const navLinks = computed(() => {
 <template>
     <footer class="border-t border-sidebar-border/80 bg-background">
         <div class="mx-auto max-w-7xl px-4 py-8 md:py-12">
-            <div class="grid gap-8 md:grid-cols-3">
-                <!-- Brand -->
-                <div class="space-y-4">
-                    <h3 class="text-lg font-semibold">Mon Blog</h3>
-                    <p class="text-sm text-muted-foreground">
-                        Un blog personnel pour partager des articles et des
-                        réflexions.
-                    </p>
-                </div>
-
+            <div class="grid gap-8 md:grid-cols-2">
                 <!-- Navigation -->
                 <div class="space-y-4">
                     <h4 class="text-sm font-semibold uppercase tracking-wider">
@@ -89,7 +80,7 @@ const navLinks = computed(() => {
                 class="mt-8 border-t border-sidebar-border/80 pt-8 text-center"
             >
                 <p class="text-sm text-muted-foreground">
-                    &copy; {{ currentYear }} Mon Blog. Tous droits réservés.
+                    &copy; {{ currentYear }} Tous droits réservés.
                 </p>
             </div>
         </div>
