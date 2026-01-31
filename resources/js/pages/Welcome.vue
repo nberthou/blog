@@ -27,7 +27,7 @@ defineProps<Props>();
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     </Head>
     <AppHeaderLayout>
-        <div class="mx-auto max-w-7xl space-y-8 px-4 py-6 sm:px-6 lg:px-8">
+        <div class="max-w-screen-2xl space-y-8 px-6 py-8 lg:px-12">
             <!-- Featured Carousel -->
             <section v-if="featuredPosts.length > 0">
                 <FeaturedCarousel :posts="featuredPosts" />
@@ -70,7 +70,7 @@ defineProps<Props>();
                 <!-- Posts Grid -->
                 <div
                     v-if="posts.data.length > 0"
-                    class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                    class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                 >
                     <PostCard
                         v-for="post in posts.data"
